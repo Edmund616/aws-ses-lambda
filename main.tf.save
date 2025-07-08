@@ -1,0 +1,20 @@
+provider "aws" {
+  region = var.aws_region
+}
+
+module "lambda" {
+  source        = "./modules/lambda"
+  source_email  = var.source_email
+  dest_email    = var.dest_email
+}
+
+module "ses" {
+  source        = "./modules/ses"
+  source_email  = var.source_email
+}
+
+module "api_gateway" {
+  source               = "./modules/api_gateway"
+  lambda_function_name = module.lambda.function_name
+  lambda_function_arn  = module.lambda.function_arn
+}
